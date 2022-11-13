@@ -8,7 +8,6 @@ from typing import Dict
 from typing import Sequence
 from typing import Any
 
-from . import config
 
 class TwitchStreams(Enum):
     AUDIO_ONLY="audio_only"
