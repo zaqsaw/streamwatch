@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Downloads m3u8 stream to /tmp/stream.mp4
-
-m3u8=$1
-DOCKER_PROCESS=$(docker run --volume /tmp:/app/download --env M3U8=${m3u8} --env NAME='/app/download/stream' --env EXT='mp4' -d streamdl:latest)
-docker logs -f ${DOCKER_PROCESS}
+mount=$1
+DOCKER_CONTAINER=$(docker run --volume ${mount}:/app/download -d streamwatcher:latest)
+docker cp docker/app/config.ini ${DOCKER_CONTAINER}:/app/config.ini
+docker logs -f ${DOCKER_CONTAINER}
 

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build docker --tag streamdl:latest
+docker build docker --tag streamwatcher:latest
