@@ -69,17 +69,19 @@ if __name__ == "__main__":
     twitch_streams: Dict[str, Any] = {}
     config = StreamWatcherConfig()
 
-    while not twitch_streams:
-        config.update()
-        if not config.streamer:
-            logging.info("No streamer set")
-            sleep(config.period)
-        else:
-            twitch_streams = get_streams(config.auth, config.streamer)
-            if not twitch_streams:
-                logging.info(f"{config.streamer} is not live yet!")
+    while not config.quit:
+        while not twitch_streams and not config.quit:
+            config.update()
+            if not config.streamer:
+                logging.info("No streamer set")
                 sleep(config.period)
+            else:
+                twitch_streams = get_streams(config.auth, config.streamer)
+                if not twitch_streams:
+                    logging.info(f"{config.streamer} is not live yet!")
+                    sleep(config.period)
 
-    url = get_priority_url(twitch_streams)
-    file_path = get_file_path(config.output_path)
-    download_stream(url, file_path)
+        if not config.quit:
+            url = get_priority_url(twitch_streams)
+            file_path = get_file_path(config.output_path)
+            download_stream(url, file_path)

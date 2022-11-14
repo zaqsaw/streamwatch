@@ -14,15 +14,11 @@ class StreamWatcherConfig:
     def __init__(self) -> None:
         self.config = ConfigParser()
         self.config[self.header] = {
-            # The name of the channel to query
             "streamer": "",
-            # The Oath Authorization can be gotten from a a browser developer console using
-            # document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=")[1]
             "auth": "",
-            # The output path to save to
             "output_path": "/app/download",
-            # The amount of time to wait in between queries, in seconds
             "period": "60",
+            "quit": "",
         }
 
     @property
@@ -40,6 +36,10 @@ class StreamWatcherConfig:
     @property
     def period(self) -> int:
         return int(self.config[self.header]["period"])
+
+    @property
+    def quit(self) -> bool:
+        return bool(self.config[self.header]["quit"])
 
     def update(self) -> None:
         cwd = Path(os.getcwd())
