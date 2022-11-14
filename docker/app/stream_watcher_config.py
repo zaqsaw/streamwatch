@@ -21,8 +21,6 @@ class StreamWatcherConfig:
             "auth": "",
             # The output path to save to
             "output_path": "/app/download",
-            # The output filename to use
-            "output_file": "stream.mp4",
             # The amount of time to wait in between queries, in seconds
             "period": "60",
         }
@@ -40,16 +38,8 @@ class StreamWatcherConfig:
         return Path(self.config[self.header]["output_path"])
 
     @property
-    def output_file(self) -> str:
-        return self.config[self.header]["output_file"]
-
-    @property
     def period(self) -> int:
         return int(self.config[self.header]["period"])
-
-    @property
-    def output_filepath(self) -> Path:
-        return self.output_path / self.output_path
 
     def update(self) -> None:
         cwd = Path(os.getcwd())

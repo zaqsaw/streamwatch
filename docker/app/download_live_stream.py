@@ -1,9 +1,12 @@
 import logging
 import os
+import pytz
 import subprocess
 
 from configparser import ConfigParser
+from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from streamlink import Streamlink
 from streamlink import streams
 from time import sleep
@@ -46,6 +49,17 @@ def get_priority_url(found_streams: Dict[str, Any]) -> str:
     raise Exception("No prioritized stream found in list")
 
 
+def get_file_path(dirpath: Path) -> str:
+    # For the purpose of the application we only need the date plus any modifier required so that a overwrite does not occur
+    filepath = str(dirpath / datetime.now(tz=pytz.timezone("US/Pacific")).strftime("%Y_%m_%d"))
+    ext = ".mp4"
+    i = 0
+    suffix = ""
+    while os.path.isfile(f"{filepath}{suffix}{ext}"):
+        suffix = f"_{i}"
+    return f"{filepath}{suffix}{ext}"
+
+
 def download_stream(url: str, pathname: str) -> None:
     ffmpeg_cmd = ["ffmpeg", "-i", url, "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-c:a", "aac", "-b:a", "128k", pathname]
     subprocess.call(ffmpeg_cmd)
@@ -67,4 +81,5 @@ if __name__ == "__main__":
                 sleep(config.period)
 
     url = get_priority_url(twitch_streams)
-    download_stream(url, str(config.output_filepath))
+    file_path = get_file_path(config.output_path)
+    download_stream(url, file_path)

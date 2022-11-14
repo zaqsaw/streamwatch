@@ -1,5 +1,6 @@
 FROM ubuntu:22.04
 RUN apt-get -qq update && \
+    apt-get install -y ffmpeg && \
     apt-get install -y python3 && \
     apt install -y python3-pip && \
     apt-get clean
