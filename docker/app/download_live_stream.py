@@ -85,3 +85,4 @@ if __name__ == "__main__":
             url = get_priority_url(twitch_streams)
             file_path = get_file_path(config.output_path)
             download_stream(url, file_path)
+            twitch_streams = {}
