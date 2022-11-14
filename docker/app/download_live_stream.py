@@ -8,7 +8,6 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from streamlink import Streamlink
-from streamlink import streams
 from time import sleep
 from typing import Dict
 from typing import Sequence
@@ -39,7 +38,13 @@ stream_priority = [
 
 def get_streams(auth: str, streamer: str) -> Dict[str, Any]:
     session = Streamlink({ "http-headers": f"Authentication=OAuth {auth}" })
-    return session.streams(f"https://www.twitch.tv/{streamer}")
+    try:
+        streams = session.streams(f"https://www.twitch.tv/{streamer}")
+        return streams
+    except Exception as e:
+        logging.error("Collecting streams failed produced an error:")
+        logging.error(e)
+        return {}
 
 
 def get_priority_url(found_streams: Dict[str, Any]) -> str:
